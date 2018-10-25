@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    
+        <link rel="stylesheet" type="text/css" href="main.css">
+    
+        <script src="./node_modules/web3/dist/web3.min.js"></script>
+    
+    </head>
+    <body>
+        <div class="container">
+    
+            <h1>employee Employee</h1>
+    
+            <h2 id="employee"></h2>
+    
+            <label for="name" class="col-lg-2 control-label">Employee Name</label>
+            <input id="name" type="text">
+    
+            <label for="name" class="col-lg-2 control-label">Employee Age</label>
+            <input id="age" type="text">
+            <button id="button">Update Employee</button>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+        }
+
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        var abi = [
+                    {
+                        "constant": false,
+                        "inputs": [
+                            {
+                                "name": "_fname",
+                                "type": "string"
+                            },
+                            {
+                                "name": "_age",
+                                "type": "uint256"
+                            }
+                        ],
+                        "name": "setEmployee",
+                        "outputs": [],
+                        "payable": false,
+                        "stateMutability": "nonpayable",
+                        "type": "function"
+                    },
+                    {
+                        "constant": true,
+                        "inputs": [],
+                        "name": "getEmployee",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "string"
+                            },
+                            {
+                                "name": "",
+                                "type": "uint256"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+            ];
+        var employeeContract = web3.eth.contract(abi);
+        var employee = employeeContract.at('0xfb627fd0bfa82c8bf2c727d6e7c257810d3274ac');
+        console.log(employee);
+
+        function updateFromEtherium() {
+            employee.getEmployee(function(error, result){
+            if(!error)
+                {
+                    $("#employee").html(result[0]+' ('+result[1]+' years old)');
+                    console.log(result);
+                }
+            else
+                console.error(error);
+            });            
+        }
+
+        updateFromEtherium();
+        
+        $("#button").click(function() {
+            employee.setEmployee($("#name").val(), $("#age").val());
+            setTimeout(updateFromEtherium, 1000);
+        });
+    </script>
+
+</body>
+</html>
