@@ -39,10 +39,27 @@
         web3.eth.defaultAccount = web3.eth.accounts[0];
         var abi = [
                     {
+                        "anonymous": false,
+                        "inputs": [
+                            {
+                                "indexed": false,
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "indexed": false,
+                                "name": "age",
+                                "type": "uint256"
+                            }
+                        ],
+                        "name": "EmployeeEvent",
+                        "type": "event"
+                    },
+                    {
                         "constant": false,
                         "inputs": [
                             {
-                                "name": "_fname",
+                                "name": "_fName",
                                 "type": "string"
                             },
                             {
@@ -74,17 +91,32 @@
                         "stateMutability": "view",
                         "type": "function"
                     }
-            ];
+        ]; // abi
+            
         var employeeContract = web3.eth.contract(abi);
-        var employee = employeeContract.at('0xfb627fd0bfa82c8bf2c727d6e7c257810d3274ac');
-        console.log(employee);
+        var employee = employeeContract.at('0x66315a4db4d901560d8035b54d426a608bc6595c');
+        var employeeEvent = employee.EmployeeEvent();
+        console.log("Contract:", employee);
+        console.log("Event:", employeeEvent);
+
+        employeeEvent.watch(function(error, result){
+            console.log("Event:", result);
+            if (!error)
+                {
+                    $("#loader").hide();
+                    $("#employee").html(result.args.name + ' (' + result.args.age + ' years old)');
+                } else {
+                    $("#loader").hide();
+                    console.log(error);
+                }
+        });
 
         function updateFromEtherium() {
             employee.getEmployee(function(error, result){
             if(!error)
                 {
                     $("#employee").html(result[0]+' ('+result[1]+' years old)');
-                    console.log(result);
+                    console.log("getEmployee", result);
                 }
             else
                 console.error(error);
@@ -92,10 +124,10 @@
         }
 
         updateFromEtherium();
-        
+
         $("#button").click(function() {
             employee.setEmployee($("#name").val(), $("#age").val());
-            setTimeout(updateFromEtherium, 1000);
+            // setTimeout(updateFromEtherium, 1000);
         });
     </script>
 
