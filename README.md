@@ -4,9 +4,17 @@
 
 ```sh
 npm install ethereum/web3.js --save
+npm install -g local-web-server
 ```
 
-## Chrome with CORS disabled:
+## Run the demo
+
+### Serve local dir over HTTP
+```sh
+ws
+```
+
+### Run Chrome with CORS disabled:
 
 Windows:
 ```sh
