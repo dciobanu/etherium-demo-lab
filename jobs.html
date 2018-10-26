@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    
+        <link rel="stylesheet" type="text/css" href="main.css">
+    
+        <script src="node_modules/web3/dist/web3.min.js"></script>
+    
+    </head>
+    <body>
+        <div class="container">
+    
+            <h1>employee Employee</h1>
+    
+            <h2 id="employee"></h2>
+
+            <label for="address" class="col-lg-2 control-label">Employee Address</label>
+            <input id="address" type="text">            
+
+            <label for="name" class="col-lg-2 control-label">Employee Name</label>
+            <input id="name" type="text">
+    
+            <label for="name" class="col-lg-2 control-label">Employee Age</label>
+            <input id="age" type="text">
+            <button id="button">Update Employee</button>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+        }
+
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        var abi = [
+                    {
+                        "anonymous": false,
+                        "inputs": [
+                            {
+                                "indexed": false,
+                                "name": "fName",
+                                "type": "bytes16"
+                            },
+                            {
+                                "indexed": false,
+                                "name": "lName",
+                                "type": "bytes16"
+                            },
+                            {
+                                "indexed": false,
+                                "name": "age",
+                                "type": "uint256"
+                            }
+                        ],
+                        "name": "employeeInfo",
+                        "type": "event"
+                    },
+                    {
+                        "constant": false,
+                        "inputs": [
+                            {
+                                "name": "_address",
+                                "type": "address"
+                            },
+                            {
+                                "name": "_age",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "_fName",
+                                "type": "bytes16"
+                            },
+                            {
+                                "name": "_lName",
+                                "type": "bytes16"
+                            }
+                        ],
+                        "name": "setEmployee",
+                        "outputs": [],
+                        "payable": false,
+                        "stateMutability": "nonpayable",
+                        "type": "function"
+                    },
+                    {
+                        "constant": true,
+                        "inputs": [],
+                        "name": "countEmployees",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "uint256"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "view",
+                        "type": "function"
+                    },
+                    {
+                        "constant": true,
+                        "inputs": [
+                            {
+                                "name": "",
+                                "type": "uint256"
+                            }
+                        ],
+                        "name": "employeeAccts",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "address"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "view",
+                        "type": "function"
+                    },
+                    {
+                        "constant": true,
+                        "inputs": [
+                            {
+                                "name": "_address",
+                                "type": "address"
+                            }
+                        ],
+                        "name": "getEmployee",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "",
+                                "type": "bytes16"
+                            },
+                            {
+                                "name": "",
+                                "type": "bytes16"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "view",
+                        "type": "function"
+                    },
+                    {
+                        "constant": true,
+                        "inputs": [],
+                        "name": "getEmployees",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "address[]"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+        ]; // abi
+            
+        var jobsContract = web3.eth.contract(abi);
+        var jobs = jobsContract.at('0x02b2ee04a6dd2d1976edde2e0f65212f68f18cc9');
+        var employeeEvent = jobs.employeeInfo();
+        console.log("Contract instance:", jobs);
+        console.log("employeeEvent:", employeeEvent);
+
+        employeeEvent.watch(function(error, result){
+            console.log("Event:", result);
+        });
+
+        function updateFromEtherium() {
+            jobs.getEmployees(function(error, result){
+            if(!error)
+                {
+                    $("#employee").html(result[0]+' ('+result[1]+' years old)');
+                    console.log("getEmployee", result);
+                }
+            else
+                console.error(error);
+            });            
+        }
+
+        updateFromEtherium();
+
+        $("#button").click(function() {
+            employee.setEmployee($("#name").val(), $("#age").val());
+            // setTimeout(updateFromEtherium, 1000);
+        });
+    </script>
+
+</body>
+</html>

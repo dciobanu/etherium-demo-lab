@@ -33,3 +33,14 @@ OSX
 ### Remix
 
 Use [Remix](http://remix.ethereum.org/) to develop, deploy and test contracts
+
+
+### Demo Lab-6
+
+Using Remix post the following transactions:
+```
+"0x687960b52b4865eaa4381ab839c267222d15146d", 39, "0x446f72696e", "0x4d63446f72696e"
+"0x687960b52b4865eaa4381ab839c267222d151461", 30, "0x4368726973", "0x4d634368726973"
+"0x687960b52b4865eaa4381ab839c267222d151462", 31, "0x457361", "0x4d63457361"
+"0x687960b52b4865eaa4381ab839c267222d151463", 32, "0x4a6f65", "0x4d634a6f65"
+```
