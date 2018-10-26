@@ -32,6 +32,14 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
     <script>
+        function hex2a(hexx) {
+            var hex = hexx.toString();//force conversion
+            var str = '';
+            for (var i = 0; (i < hex.length && hex.substr(i, 2) !== '00'); i += 2)
+                str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+            return str;
+        }
+
         if (typeof web3 !== 'undefined') {
             web3 = new Web3(web3.currentProvider);
         } else {
@@ -179,8 +187,14 @@
             jobs.getEmployees(function(error, result){
             if(!error)
                 {
-                    $("#employee").html(result[0]+' ('+result[1]+' years old)');
-                    console.log("getEmployee", result);
+                    $("#employee").html('');
+                    result.forEach((id) => {
+                        jobs.getEmployee(id, (err, result) => {
+                            // console.log(result);
+                            $("#employee").html($("#employee").html() + hex2a(result[1]) + ' ' + hex2a(result[2]) + ' ('+result[0]+' years old) <br>');
+                        });
+                    });
+                    console.log("getEmployees", result);
                 }
             else
                 console.error(error);
